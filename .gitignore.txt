@@ -1,3 +1,0 @@
-#compiler files
-a.exe
-scantron.exe
