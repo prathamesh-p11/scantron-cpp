@@ -4,9 +4,75 @@
 
 using namespace std;
 
-
-int calc_score(int ans_key[],int *stud_ans, int no_stud,  int no_q)
+class scantron
 {
+    
+    string f_name;
+    int no_q;
+    int no_stud;
+
+public:
+
+    scantron();
+    void read_ans(string, int, int);
+    int calc_score(int a[],int *b);
+    
+    void set_no_q(int);
+    int get_no_q();
+    
+    void set_no_stud(int);
+    int get_no_stud();
+
+    void set_f_name(string);
+    string get_f_name();
+};
+
+scantron::scantron()
+{
+    f_name = "";
+    no_q = 0;
+    no_stud = 0;
+}
+
+void scantron::set_f_name(string f_name)
+{
+    this->f_name = f_name;
+}
+
+string scantron::get_f_name()
+{
+    return f_name;
+}
+
+
+void scantron::set_no_q(int no_q)
+{
+    this->no_q = no_q;
+}
+
+int scantron::get_no_q()
+{
+    return no_q;
+}
+
+
+void scantron::set_no_stud(int no_stud)
+{
+    this->no_stud = no_stud;
+}
+
+int scantron::get_no_stud()
+{
+    return no_stud;
+}
+
+
+
+int scantron::calc_score(int ans_key[],int *stud_ans)
+{
+    scantron s;
+    int no_stud = s.get_no_stud();
+    int no_q = s.get_no_q();
     int marks = 0;
     int total_score =0;
     marks = 100 / no_q;
@@ -23,18 +89,24 @@ int calc_score(int ans_key[],int *stud_ans, int no_stud,  int no_q)
 }
 
 
-void read_ans(string f_name, int no_q, int no_stud)
+void scantron::read_ans(string f_name,int no_q,int no_stud)
 {
+    /*
+    scantron s;
+    string f_name = s.get_f_name(); 
+    int no_q = s.get_no_q();
+    int no_stud = s.get_no_stud();
+*/
+
     int vals;
     int i;
     string line;
     int stud_ans[no_stud][no_q+1];
     ifstream fin;
-    int marksheet[no_stud][2];  //stores student roll and total score for that student
-    
+    int marksheet[no_stud][2];  //stores student roll and total score for that student   
+
     fin.open(f_name);
-
-
+  
     //init stud_ans matrix and marskheet matrix
     for(int i=0;i<no_stud;i++)
     {
@@ -84,22 +156,24 @@ void read_ans(string f_name, int no_q, int no_stud)
     for(int i=0;i<no_stud;i++)
     {
         marksheet[i][1] = stud_ans[i][0];
-        marksheet[i][2] = calc_score(ans_key, &stud_ans[i][0], no_stud, no_q);
+        marksheet[i][2] = calc_score(ans_key, &stud_ans[i][0]);
     }
 
-    /*
+    
     cout<<"\n\nMarksheet =>\n";
     for(int i=0;i<no_stud;i++)
     {
         cout<<marksheet[i][1]<<"  Scored :"<<marksheet[i][2]<<"\n";    
     }
-    */
+    
 
 
 }
 
 int main()
 {
+    scantron s;
+
     //variables
     string f_name;
     ifstream fin;
@@ -117,7 +191,8 @@ int main()
 
     cout<<"Enter file name:";
     cin>>f_name;
-    fin.open(f_name);
+    s.set_f_name(f_name);
+    fin.open(s.get_f_name());
 
     if(!fin)
     {
@@ -125,7 +200,8 @@ int main()
         exit(1);
     }
     fin>>no_q;
-    cout<<"NO Q :"<<no_q;
+   s.set_no_q(no_q);
+
     getline(fin,line);
     
    //count number of students
@@ -135,9 +211,9 @@ int main()
        no_stud++;
    }
 
-    cout<<"\nNumber of students =>"<<no_stud;
+   s.set_no_stud(no_stud);
    
-    read_ans(f_name,no_q,no_stud);
+   s.read_ans(s.get_f_name(),s.get_no_q(),s.get_no_stud());
 
     return 0;
 }
